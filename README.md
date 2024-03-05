@@ -6,7 +6,7 @@ I'll try to release the code in the near future.
 
 I'm also looking for computing resources to help me complete more experiments. Email: harviezzw@gmailcom
 
-##Dicussion
+## Dicussion
 
 QQ Group: 797169707
 
