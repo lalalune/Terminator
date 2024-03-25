@@ -9,4 +9,4 @@ I'll try to release the code in the near future.
 
 Email: harviezzw@gmail.com
 
-Discord: https://discord.gg/WeXxdDVe
+Discord: https://discord.gg/M98safSsyq
