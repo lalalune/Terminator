@@ -4,7 +4,7 @@ HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction
 
 ~~I'll try to release the code in the near future.~~
 
-Unfortunately, the code will not be open source. Thank you for your interest.
+~~Unfortunately, the code will not be open source. Thank you for your interest.~~
 
 ## Dicussion
 
