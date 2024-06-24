@@ -16,5 +16,3 @@ HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction
 
 If you have any questions, you can contact me by harviezzw@gmail.com.
 
-Discord: [https://discord.gg/rMeWTHaY](https://discord.gg/hxR355AFcs)
-
