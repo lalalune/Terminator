@@ -8,8 +8,6 @@ HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction
 
 2. I try to open source the code in the next few days.
 
-3. I am also looking for more computing resources (16+ 80GB GPUs) to construct large-scale experiments.
-
 ## Dicussion
 
 If you have any questions, you can contact me by harviezzw@gmail.com.
