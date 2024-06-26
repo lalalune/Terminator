@@ -27,7 +27,13 @@ class LocalConv(torch.nn.Module):
         
         norm_name = f"BatchNorm2d"
         NormType = getattr(torch.nn, norm_name)
-        self.norm = NormType(in_channels, eps=1e-05, momentum=1.0, affine=False, track_running_stats=False)
+        self.norm = NormType(
+            in_channels, 
+            eps=1e-05, 
+            momentum=1.0,
+            affine=False, 
+            track_running_stats=False
+        )
         
         NonlinearType = getattr(torch.nn, 'GELU')
         self.nonlinear = NonlinearType()
