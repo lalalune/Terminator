@@ -3,7 +3,7 @@ import torch
 from models.modules import LocalConv
 
 
-def HyperZZW_G(self, global_hk, x):
+def HyperZZW_G(global_hk, x):
     """
     Global hyperzzw by dot product
     """
