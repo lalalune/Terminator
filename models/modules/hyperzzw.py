@@ -33,7 +33,6 @@ class HyperZZW_L(torch.nn.Module):
         self.bias = torch.nn.Parameter(torch.zeros(1))
     
     def forward(self, x1, x2):
-        
         local_ctx_hk = self.slow_net(x1)
         
         local_feat = self.local_conv(local_ctx_hk, x2) + self.bias
