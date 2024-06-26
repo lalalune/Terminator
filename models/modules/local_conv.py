@@ -2,6 +2,9 @@ import torch
 
 
 class LocalConv(torch.nn.Module):
+    """
+    A local branch
+    """
     def __init__(
         self,
         in_channels: int,
