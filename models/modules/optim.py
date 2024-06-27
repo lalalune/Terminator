@@ -19,7 +19,6 @@ def construct_optimizer(
     # Unpack values from optim_cfg
     optimizer_type = optim_cfg.name
     lr = optim_cfg.lr
-    weight_decay = optim_cfg.weight_decay
 
     # Construct optimizer
     if optimizer_type == "Kar3":
@@ -27,7 +26,6 @@ def construct_optimizer(
             params=model.parameters(),
             lr=lr,
             betas=(0.5, 0.95),
-            weight_decay=0.0,
         )
         
     return optimizer
