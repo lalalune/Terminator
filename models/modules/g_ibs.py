@@ -13,7 +13,6 @@ class G_IBS(nn.Module):
         super(G_IBS, self).__init__()
         
         g_channels = int(math.floor(channels / group_num))
-        
         self.groups = [g_channels] * group_num
         
         self.batch_std = nn.BatchNorm2d(
