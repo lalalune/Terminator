@@ -4,8 +4,7 @@ import torch
 import torch.nn as nn
 
 from models.modules.hyperzzw import HyperZZW_2E
-from models.modules.slow_net_gc import SlowNet_GC
-from models.modules.slow_net_gs import SlowNet_GS
+from models.modules.slow_net import SlowNet_GC, SlowNet_GS
 
 from omegaconf import OmegaConf
     
