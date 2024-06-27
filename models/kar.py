@@ -12,8 +12,7 @@ class Kar3(Optimizer):
         parameter groups
       lr (float, optional): learning rate (default: 1e-4)
       betas (Tuple[float, float], optional): coefficients used for computing
-        running averages of gradient and its square (default: (0.9, 0.99))
-      weight_decay (float, optional): weight decay coefficient (default: 0)
+        running averages of gradient and its square (default: (0.5, 0.95))
     """
 
     if not 0.0 <= lr:
