@@ -20,14 +20,14 @@ class HyperZZW_L(torch.nn.Module):
     """
     def __init__(
         self,
-        SlowConvType: torch.nn.Module,
+        SlowNetType_L: torch.nn.Module,
         in_channels: int,
         kernel_size: int,
     ):
         super().__init__(
         )
         
-        self.slow_net = SlowNetType(in_channels=in_channels, kernel_size=kernel_size)
+        self.slow_net = SlowNetType_L(in_channels=in_channels, kernel_size=kernel_size)
         
         self.local_conv = LocalConv(in_channels=in_channels, kernel_size=kernel_size)
         self.bias = torch.nn.Parameter(torch.zeros(1))
