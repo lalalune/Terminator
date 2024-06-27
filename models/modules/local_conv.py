@@ -1,5 +1,7 @@
 import torch
 
+from models.modules import linear
+
 
 class LocalConv(torch.nn.Module):
     """
