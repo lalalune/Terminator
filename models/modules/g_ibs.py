@@ -9,7 +9,7 @@ class G_IBS(nn.Module):
         self,
         channels: int,
         group_num: int,
-        ):
+    ):
         super(G_IBS, self).__init__()
         
         g_channels = int(math.floor(channels / group_num))
