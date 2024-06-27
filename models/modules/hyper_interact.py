@@ -51,7 +51,8 @@ class HyperChannelSpatialInteract(nn.Module):
     """.
     Args:
         channel: number of channels of the input feature map
-        kernel_cfg: parameters of slow net
+        kernel_cfg_c: parameters of channel-based slow net
+        kernel_cfg_s: parameters of spatial-based slow net
     """
     def __init__(
         self, 
