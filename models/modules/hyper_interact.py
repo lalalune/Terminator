@@ -46,7 +46,6 @@ class HyperChannelInteract(nn.Module):
         return x * score.expand_as(x)   # NCHW
 
 
-
 class HyperChannelSpatialInteract(nn.Module):
     """.
     Args:
