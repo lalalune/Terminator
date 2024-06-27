@@ -38,3 +38,14 @@ class HyperZZW_L(torch.nn.Module):
         local_feat = self.local_conv(local_ctx_hk, x2) + self.bias
         
         return local_feat
+
+
+def HyperZZW_2E(hk, x):
+    """
+    Hyperzzw with two elementwise multiplication
+    """
+    ctx_hk = x.mul(hk)
+        
+    feat = torch.matmul(ctx_hk, x)
+        
+    return feat
