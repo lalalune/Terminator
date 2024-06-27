@@ -46,6 +46,6 @@ def HyperZZW_2E(hk, x):
     """
     ctx_hk = x.mul(hk)
         
-    feat = torch.matmul(ctx_hk, x)
+    feat = torch.mul(ctx_hk, x)
         
     return feat
