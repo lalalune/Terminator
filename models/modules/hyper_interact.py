@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 
 from models.modules.hyperzzw import HyperZZW_2E
-from models.modules.slow_net import SlowNet_GC, SlowNet_GS
+from models.modules.slow_net import SlowNet_GC, SlowNet_G
 
 from omegaconf import OmegaConf
     
@@ -74,7 +74,7 @@ class HyperInteract(nn.Module):
         
         # slow net for spatial
         SlowNetType_GS = partial(
-            SlowNet_GS,
+            SlowNet_G,
             data_dim=2,
             layer_cfg=kernel_cfg_s,
             )
