@@ -46,7 +46,7 @@ class HyperChannelInteract(nn.Module):
         return x * score.expand_as(x)   # NCHW
 
 
-class HyperChannelSpatialInteract(nn.Module):
+class HyperInteract(nn.Module):
     """.
     Args:
         channel: number of channels of the input feature map
@@ -59,7 +59,7 @@ class HyperChannelSpatialInteract(nn.Module):
         kernel_cfg_c: OmegaConf, 
         kernel_cfg_s: OmegaConf
     ):
-        super(HyperChannelSpatialInteract, self).__init__()
+        super(HyperInteract, self).__init__()
         
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.sigmoid = nn.Sigmoid()
@@ -80,27 +80,27 @@ class HyperChannelSpatialInteract(nn.Module):
             )
         self.slow_net_gs = SlowNetType_GS(in_channels=1)
 
-    def forward(self, x, x2=None):   # x: NCHW
+    def forward(self, y, x=None):   # high-level output y: NCHW
         
         # hyper-channel interaction
-        x_c = self.avg_pool(x)   # NC11
-        x_c = x_c.squeeze(-1).transpose(-1, -2)   # N1C
-        hk_gc = self.slow_net_gc(x_c)   # 11C
+        y_c = self.avg_pool(y)   # NC11
+        y_c = y_c.squeeze(-1).transpose(-1, -2)   # N1C
+        hk_gc = self.slow_net_gc(y_c)   # 11C
         # **hyperzzw_2e**
-        score_s = HyperZZW_2E(hk_gc, x_c)
+        score_s = HyperZZW_2E(hk_gc, y_c)
         score_s = score_s.transpose(-1, -2).unsqueeze(-1)   # NC11
         
         # hyper-spatial interaction
-        x_s = x.mean(axis=1, keepdims=True)  # N1HW
-        hk_gs = self.slow_net_gs(y)   # 1HW
+        y_s = y.mean(axis=1, keepdims=True)  # N1HW
+        hk_gs = self.slow_net_gs(y_s)   # 1HW
         # **hyperzzw_2e**
-        score_s = HyperZZW_2E(hk_gs, x_s)
+        score_s = HyperZZW_2E(hk_gs, y_s)
 
         # channel-spatial
         score = score_s.mul(score_c)   # NCHW
         score = self.sigmoid(score)
 
-        if x2 is not None:
-            return x2 * score
-        else:
+        if x is not None:
             return x * score
+        else:
+            return y * score
