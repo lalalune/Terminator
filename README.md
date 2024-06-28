@@ -6,7 +6,7 @@ HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction
 
 1. Thank Alex Yanko for posting this work on X (https://x.com/LeopolisDream/status/1804627325583327358), which attracted more people's attention.
 
-2. I try to open source the code in the next few days.
+2. I try to open source the code in the next few days. (Updating...)
 
 ## Dicussion
 
