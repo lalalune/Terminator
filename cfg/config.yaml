@@ -1,0 +1,6 @@
+device: cuda
+debug: False
+deterministic: False
+no_workers: 8
+seed: 0
+
