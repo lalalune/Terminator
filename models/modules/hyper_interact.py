@@ -94,10 +94,10 @@ class HyperInteract(nn.Module):
         y_s = y.mean(axis=1, keepdims=True)  # N1HW
         hk_gs = self.slow_net_gs(y_s)   # 1HW
         # **hyperzzw_2e**
-        score_s = HyperZZW_2E(hk_gs, y_s)
+        score_s = HyperZZW_2E(hk_gs, y_s)   # N1HW
 
         # channel-spatial
-        score = score_s.mul(score_c)   # NCHW
+        score = score_s.mul(score_c)   # N1HW*NC11 -> NCHW
         score = self.sigmoid(score)
 
         if x is not None:
