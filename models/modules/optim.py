@@ -1,9 +1,10 @@
 import torch
 import torch_optimizer as optim
-from omegaconf import OmegaConf
 
 from .kar import Kar3
-    
+
+from omegaconf import OmegaConf
+
 
 def construct_optimizer(
     model,
