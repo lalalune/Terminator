@@ -20,13 +20,14 @@ def construct_optimizer(
     # Unpack values from optim_cfg
     optimizer_type = optim_cfg.name
     lr = optim_cfg.lr
+    betas = optim_cfg.betas
 
     # Construct optimizer
     if optimizer_type == "Kar3":
         optimizer = Kar3(
             params=model.parameters(),
             lr=lr,
-            betas=(0.5, 0.95),
+            betas=(betas[0], betas[1]),
         )
     elif optimizer_type == "Kar2":
         optimizer = Kar2(
