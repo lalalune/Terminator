@@ -6,6 +6,15 @@ import torch
 from omegaconf import OmegaConf
 
 
+def no_param(
+    model: torch.nn.Module,
+) -> int:
+    """
+    Calculates the number of parameters of a torch.nn.Module.
+    """
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+
 def flatten_configdict(
     cfg: OmegaConf,
     separation_mark: str = ".",
