@@ -29,7 +29,7 @@ class RGU(torch.nn.Module):
         self.fast_linear_k = Linear(in_channels=in_channels, out_channels=in_channels, bias=True)
         # W_V
         self.fast_linear_v = Linear(in_channels=in_channels, out_channels=in_channels, bias=True)
-        # W_Q &
+        # W_Q
         self.fast_linear_q = Linear(in_channels=in_channels, out_channels=in_channels, bias=True)
         # W_Y
         self.fast_linear_y = Linear(in_channels=in_channels, out_channels=in_channels, bias=True)
