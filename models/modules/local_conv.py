@@ -27,9 +27,10 @@ class LocalConv(torch.nn.Module):
         torch.nn.init.kaiming_normal_(self.channel_mixer.weight)
         torch.nn.init._no_grad_fill_(self.channel_mixer.bias, 0.0)
         
+        # Batch Standardization
         norm_name = f"BatchNorm2d"
         NormType = getattr(torch.nn, norm_name)
-        self.norm = NormType(
+        self.batch_std = NormType(
             in_channels, 
             eps=1e-05, 
             momentum=1.0,
@@ -37,6 +38,7 @@ class LocalConv(torch.nn.Module):
             track_running_stats=False
         )
         
+        # Nonlinear
         NonlinearType = getattr(torch.nn, 'GELU')
         self.nonlinear = NonlinearType()
         
@@ -45,6 +47,6 @@ class LocalConv(torch.nn.Module):
         
         local_feat = self.local_conv(x, local_hk, stride=1, padding=self.padding, dilation=1, groups=groups)
         local_feat = self.channel_mixer(local_feat)
-        local_feat = self.nonlinear(self.norm(local_feat))
+        local_feat = self.nonlinear(self.batch_std(local_feat))
             
         return local_feat
