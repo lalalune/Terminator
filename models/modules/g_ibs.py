@@ -25,7 +25,8 @@ class G_IBS(nn.Module):
         self.ins_std = nn.InstanceNorm2d(
             num_features=g_channels,
             momentum=1.0,
-            affine=False
+            affine=False,
+            track_running_stats=False
         )
 
     def forward(self, x):
