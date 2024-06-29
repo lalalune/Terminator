@@ -1,7 +1,7 @@
 import torch
 import torch_optimizer as optim
 
-from .kar import Kar3
+from .kar import Kar3, Kar2
 
 from omegaconf import OmegaConf
 
@@ -28,7 +28,13 @@ def construct_optimizer(
             lr=lr,
             betas=(0.5, 0.95),
         )
-        
+    elif optimizer_type == "Kar2":
+        optimizer = Kar2(
+            params=model.parameters(),
+            lr=lr,
+            betas=(0.95),
+        )
+    
     return optimizer
 
 
