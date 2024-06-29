@@ -25,6 +25,7 @@ class SlowNetBase(torch.nn.Module):
         in_channels: int,
         data_dim: int,
         kernel_cfg: OmegaConf,
+        **kwargs,
     ):
         super().__init__(
         )
@@ -49,7 +50,7 @@ class SlowNetBase(torch.nn.Module):
             kernel_size=self.kernel_size,
             hidden_channels=hidden_channels,
             out_channels=in_channels,
-            no_layers=num_layers,
+            num_layers=num_layers,
             omega_0=omega_0,
         )
     
@@ -81,7 +82,7 @@ class SlowNetBase(torch.nn.Module):
         if not self.initialized[0]:
             # Initialize the last layer of self.Kernel as in Chang et al. (2020)
             with torch.no_grad():
-                kernel_size = kernel_coordss.reshape(
+                kernel_size = kernel_coords.reshape(
                     *kernel_coords.shape[: -self.data_dim], -1
                 )
                 normalization_factor = kernel_size.shape[-1]
@@ -120,6 +121,43 @@ class SlowNet_L(SlowNetBase):
     """
     The slow net to generate context-dependent hyper-kernel for local branch
     """
+    def __init__(
+        self,
+        in_channels: int,
+        data_dim: int,
+        kernel_cfg: OmegaConf,
+        kernel_size: int,
+    ):
+        super().__init__(
+            in_channels=in_channels,
+            data_dim=data_dim,
+            kernel_cfg=kernel_cfg,
+        )
+        
+        self.data_dim = data_dim
+        self.kernel_size = kernel_size
+        
+        kernel_type = kernel_cfg.type
+        hidden_channels = kernel_cfg.no_hidden
+        num_layers = kernel_cfg.num_layers
+        omega_0 = kernel_cfg.omega_0
+        
+        # Variable placeholders
+        self.register_buffer("train_length", torch.zeros(1).int(), persistent=True)
+        self.register_buffer("kernel_coords", torch.zeros(1), persistent=False)
+        self.register_buffer("initialized", torch.zeros(1).bool(), persistent=False)
+        
+        # Create the kernel
+        KernelClass = getattr(magnet, kernel_type)
+        self.Kernel = KernelClass(
+            data_dim=data_dim,
+            kernel_size=self.kernel_size,
+            hidden_channels=hidden_channels,
+            out_channels=in_channels,
+            num_layers=num_layers,
+            omega_0=omega_0,
+        )
+    
     def forward(self, x):
         local_hk = self.construct_kernel(x)
         
