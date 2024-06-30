@@ -3,8 +3,51 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+def l2_loss(input, target, size_average=True):
+    """ L2 Loss without reduce flag.
+    Args:
+        input (FloatTensor): Input tensor
+        target (FloatTensor): Output tensor
+    Returns:
+        [FloatTensor]: L2 distance between input and output
+    """
+    if size_average:
+        return torch.mean(torch.pow((input-target), 2))
+    else:
+        return torch.pow((input-target), 2)
+
+
+def calculate_product_between_positions(x, start_idx, end_idx):
+    product = 1
+    for i in range(start_idx, end_idx + 1):
+        product *= x[i]
+    return product
+
+
+def calculate_slow_neural_loss(ghk_bs, factors):
+    """
+    Computes the distance of global hyper-kernels between blocks
+    Args:
+        ghk_bs: global hyper kernels of all blocks are in a list
+        factors: the bottleneck factors in all blocks
+    Returns:
+        L2 distance between them
+    """
+    num_block = len(ghk_bs)
+    slow_loss = 0.0
+    for i in range(num_block-1, 0, -1):
+        ghk_deep = ghk_bs[i]
+        for j in range(0, i, 1):
+            ghk_shallow = ghk_bs[j]
+            factor = calculate_product_between_positions(factors, j, i-1)
+            
+            slow_loss += l2_loss(torch.tile(ghk_bs[j], (1, factor, 1, 1)), ghk_bs[i])
+            
+    return slow_loss
+
+
 class LabelSmoothingCrossEntropy(nn.Module):
-    def __init__(self, eps=0.09, reduction='mean'):
+    def __init__(self, eps=0.1, reduction='mean'):
         super(LabelSmoothingCrossEntropy, self).__init__()
         self.eps = eps
         self.reduction = reduction
@@ -19,6 +62,7 @@ class LabelSmoothingCrossEntropy(nn.Module):
             loss = -log_preds.sum(dim=-1)
             if self.reduction=='mean':
                 loss = loss.mean()
+        
         return loss*self.eps/c + (1-self.eps) * F.nll_loss(log_preds, target, reduction=self.reduction)
     
 
@@ -63,32 +107,3 @@ class LnLoss(torch.nn.Module):
         loss = self.weight_loss * loss
         
         return loss
-
-
-def l2_loss(input, target, size_average=True):
-    """ L2 Loss without reduce flag.
-    Args:
-        input (FloatTensor): Input tensor
-        target (FloatTensor): Output tensor
-    Returns:
-        [FloatTensor]: L2 distance between input and output
-    """
-    if size_average:
-        return torch.mean(torch.pow((input-target), 2))
-    else:
-        return torch.pow((input-target), 2)
-
-
-def slow_neural_loss(global_hk_1, global_hk_2, scale_coeff):
-    """
-    Computes the distance of global hyper-kernels between blocks
-    Args:
-        global_hk_1: in shallow block with 1*C*H*W
-        global_hk_2: in deep block with 1*(C*scale_coeff)*H*W
-        scale_coeff: the increase of channel
-    Returns:
-        L2 distance between them
-    """
-    loss = l2_loss(torch.tile(global_hk_1, (1, scale_coeff, 1, 1)), global_hk_2)
-    
-    return loss
