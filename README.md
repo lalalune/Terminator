@@ -1,4 +1,4 @@
-# Terminator (debuging...)
+# Terminator (rechecking...)
  
 HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction (https://arxiv.org/pdf/2401.17948.pdf)
 
