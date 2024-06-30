@@ -21,7 +21,7 @@ HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction
 - [x] A multi-branch structure - `Slow-Fast Neural Encoding (SFNE)` Block
 - [x] A local `slow neural loss` to obtain accurate pixel-level scores (i.e. pixel-level "attention")
 - [x] `Three new components`: RGU, Hyper-Channel Interaction, Hyper Interaction
-- [x] `Excellent Properties`: Fast Training Convergence, Zero-mean Features, Fewer Model Parameters
+- [x] `Excellent Properties`: Faster Training Convergence, Zero-mean Features, Fewer Model Parameters
 
 
 ### Installation
