@@ -2,7 +2,6 @@ import math
 
 import torch
 import torch.nn as nn
-from omegaconf import OmegaConf
 
 from models.modules import magnet
 
@@ -24,7 +23,7 @@ class SlowNetBase(torch.nn.Module):
         self,
         in_channels: int,
         data_dim: int,
-        kernel_cfg: OmegaConf,
+        kernel_cfg: dict,
         **kwargs,
     ):
         super().__init__(
@@ -125,7 +124,7 @@ class SlowNet_L(SlowNetBase):
         self,
         in_channels: int,
         data_dim: int,
-        kernel_cfg: OmegaConf,
+        kernel_cfg: dict,
         kernel_size: int,
     ):
         super().__init__(

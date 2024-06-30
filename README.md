@@ -35,12 +35,12 @@ conda env create -f environment.yml
 
 #### Training commands
 ```shell
-python main.py dataset.name="CIFAR10" optimizer.name="Kar3" optimizer.lr=0.001215 optimizer.l2_reg=0.00005 optimizers.betas=[0.5, 0.95]
+python -m models.terminator --mode train
 ```
 
 #### Testing commands
 ```shell
-python main.py dataset.name="CIFAR10" train.do=False pretrained.load=True pretrained.filename='**'
+python -m models.terminator --mode eval
 ```
 
 
