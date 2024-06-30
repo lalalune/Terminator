@@ -15,6 +15,15 @@ HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction
 2. I seem to have got better results than before!
 
 
+### Overall Architecture
+- [x] No residual connections
+- [x] A new variant of self-attention / FWP - HyperZ⋅Z⋅W operator
+- [x] A multi-branch structure - Slow-Fast Neural Encoding (SFNE) Block
+- [x] A local slow neural loss to obtain accurate pixel-level scores (i.e. pixel-level "attention")
+- [x] Three new components: RGU, Hyper-Channel Interaction, Hyper Interaction
+- [x] Excellent Properties: Fast Training Convergence, Zero-mean Features, Fewer Model Parameters
+
+
 ### Installation
 
 We provide an environment file ``environment.yml`` containing the required dependencies. Clone the repo and run the following command in the root of this directory:
