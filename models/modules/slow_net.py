@@ -36,7 +36,6 @@ class SlowNetBase(torch.nn.Module):
         kernel_type = kernel_cfg.type
         hidden_channels = kernel_cfg.no_hidden
         num_layers = kernel_cfg.num_layers
-        omega_0 = kernel_cfg.omega_0
         
         # Variable placeholders
         self.register_buffer("train_length", torch.zeros(1).int(), persistent=True)
@@ -51,7 +50,6 @@ class SlowNetBase(torch.nn.Module):
             hidden_channels=hidden_channels,
             out_channels=in_channels,
             num_layers=num_layers,
-            omega_0=omega_0,
         )
     
     def construct_kernel(self, x):
@@ -140,7 +138,6 @@ class SlowNet_L(SlowNetBase):
         kernel_type = kernel_cfg.type
         hidden_channels = kernel_cfg.no_hidden
         num_layers = kernel_cfg.num_layers
-        omega_0 = kernel_cfg.omega_0
         
         # Variable placeholders
         self.register_buffer("train_length", torch.zeros(1).int(), persistent=True)
@@ -155,7 +152,6 @@ class SlowNet_L(SlowNetBase):
             hidden_channels=hidden_channels,
             out_channels=in_channels,
             num_layers=num_layers,
-            omega_0=omega_0,
         )
     
     def forward(self, x):
