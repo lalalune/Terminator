@@ -3,7 +3,7 @@ import os
 import torch
 import pytorch_lightning as pl
 
-from datamodules.cifar10 import CIFAR10DataModule
+from datamodules.cifar10 import CIFAR10DataModule, CIFAR100DataModule
 
 from omegaconf import OmegaConf
 
@@ -26,6 +26,9 @@ def construct_datamodule(
     if cfg.dataset.name == "CIFAR10":
         dataset_name = f"{cfg.dataset.name}DataModule"
         dataset = CIFAR10DataModule
+    elif cfg.dataset.name == "CIFAR100":
+        dataset_name = f"{cfg.dataset.name}DataModule"
+        dataset = CIFAR100DataModule
     else:
         dataset_name = f"{cfg.dataset.name}DataModule"
         dataset = CIFAR100DataModule
