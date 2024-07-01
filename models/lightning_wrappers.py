@@ -14,8 +14,8 @@ from models.modules.loss import LnLoss, LabelSmoothingCrossEntropy
 from models.optim import construct_optimizer, construct_scheduler, ChainedScheduler
 
 from omegaconf import OmegaConf
-        
-        
+
+
 class LightningWrapperBase(pl.LightningModule):
     def __init__(
         self,
@@ -31,9 +31,9 @@ class LightningWrapperBase(pl.LightningModule):
         self.optim_cfg = cfg.optimizer
         self.scheduler_cfg = cfg.scheduler
         # Regularization metrics
-        if self.optim_cfg.weight_decay != 0.0:
+        if self.optim_cfg.l2_reg != 0.0:
             self.weight_regularizer = LnLoss(
-                weight_loss=self.optim_cfg.weight_decay,
+                weight_loss=self.optim_cfg.l2_reg,
                 norm_type=2,
             )
         else:
@@ -306,9 +306,7 @@ class ClassificationWrapper(LightningWrapperBase):
         log_dir = self.trainer.logger.experiment.dir
         if log_dir is not None:
             file_name = self.cfg.net.type + "_" + "val_acc.txt"
-
             file_path = os.path.join(log_dir, file_name)
-
             with open(file_path, "a") as file:
                 file.write(str(val_acc.cpu().numpy()) + "\n")
                 
