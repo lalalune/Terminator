@@ -7,6 +7,21 @@
 HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction (https://arxiv.org/pdf/2401.17948.pdf)
 
 
+## Abstract
+The self-attention mechanism utilizes large implicit weight matrices, programmed through dot product-based
+activations with very few trainable parameters, to enable long sequence modeling. In this paper, we investigate the
+possibility of discarding residual learning by employing large implicit kernels to achieve full context interaction at
+each layer of the network. To accomplish it, we introduce coordinate-based implicit MLPs as a slow network to
+generate hyper-kernels1 for another fast convolutional network2. To get context-varying weights for fast dynamic encoding, 
+we propose a HyperZ·Z·W operator that connects hyper-kernels (W) and hidden activations (Z) through simple elementwise multiplication, 
+followed by convolution of Z using the context-dependent W. Based on this design, we present a novel Terminator architecture that integrates
+hyper-kernels of different sizes to produce multi-branch hidden representations for enhancing the feature extraction capability of each layer. 
+Additionally, a bottleneck layer is employed to compress the concatenated channels, allowing only valuable information to propagate to the subsequent layers. 
+Notably, our model incorporates several innovative components and exhibits excellent properties, such as introducing local feedback error for updating the slow
+network, stable zero-mean features, faster training convergence, and fewer model parameters. Extensive experimental results on 
+pixel-level 1D and 2D image classification benchmarks demonstrate the superior performance of our architecture.
+
+
 
 ## Updates
 
