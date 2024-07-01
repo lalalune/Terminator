@@ -143,27 +143,27 @@ class FastMultiBranchLayer(torch.nn.Module):
         mixer_x = self.ins_std(mixer_x)
         
         # hyper-channel interaction
-        x_eca = self.channel_mixer_hci(x)
-        x_eca = self.ins_std(x_eca)
+        x_hci = self.channel_mixer_hci(x)
+        x_hci = self.ins_std(x_hci)
 
         # global branches
         out = torch.matmul(global_ctx_hk, fast)
         out_x = torch.matmul(global_ctx_hk, mixer_x)
-        out_eca = torch.matmul(global_ctx_hk, x_eca)
+        out_eca = torch.matmul(global_ctx_hk, x_hci)
         
         # si-glu
         out_glu = self.nonlinear(out) * out
         
         # hyper interaction
-        x_eca_hyper = self.hyper_interact(out, x)
+        x_hyper = self.hyper_interact(out, x)
         
         # local branches
         local_kernel_f1 = self.slow_net_l1(x) 
-        local_kernel_f2 = self.slow_net_l2(x_eca)
+        local_kernel_f2 = self.slow_net_l2(x_hci)
         local_kernel_f3 = self.slow_net_l3(mixer_x)
         local_kernel_f4 = self.slow_net_l4(x)
         
-        local_feat_1 = self.local_interact_conv_1(local_kernel_f1, x_eca) + self.bias1
+        local_feat_1 = self.local_interact_conv_1(local_kernel_f1, x_hci) + self.bias1
         local_feat_2 = self.local_interact_conv_2(local_kernel_f2, x) + self.bias2
         local_feat_3 = self.local_interact_conv_3(local_kernel_f3, x) + self.bias3
         local_feat_4 = self.local_interact_conv_4(local_kernel_f4, mixer_x) + self.bias4
@@ -173,7 +173,7 @@ class FastMultiBranchLayer(torch.nn.Module):
             scale = x.shape[1] // x_pre.shape[1]
             x_pre_1 = x_pre.repeat(1, scale, 1, 1)
             
-            out_concat = torch.cat([out, local_feat_2, x_pre_1, fast, out_x, local_feat_1, out_glu, local_feat_3, out_eca, local_feat_4, x_eca_hyper], 1)
+            out_concat = torch.cat([out, local_feat_2, x_pre_1, fast, out_x, local_feat_1, out_glu, local_feat_3, out_eca, local_feat_4, x_hyper], 1)
             
         elif x_pre_pre is not None:
             scale = x.shape[1] // x_pre.shape[1]
@@ -182,10 +182,10 @@ class FastMultiBranchLayer(torch.nn.Module):
             scale = x.shape[1] // x_pre_pre.shape[1]
             x_pre_pre_1 = x_pre_pre.repeat(1, scale, 1, 1)
             
-            out_concat = torch.cat([out, local_feat_2, x_pre_1, fast, out_x, local_feat_1, out_glu, local_feat_3, out_eca, local_feat_4, x_pre_pre_1, x_eca_hyper], 1)
+            out_concat = torch.cat([out, local_feat_2, x_pre_1, fast, out_x, local_feat_1, out_glu, local_feat_3, out_eca, local_feat_4, x_pre_pre_1, x_hyper], 1)
             
         else:
-            out_concat = torch.cat([out, local_feat_2, fast, out_x, local_feat_1, out_glu, local_feat_3, out_eca, local_feat_4, x_eca_hyper], 1)
+            out_concat = torch.cat([out, local_feat_2, fast, out_x, local_feat_1, out_glu, local_feat_3, out_eca, local_feat_4, x_hyper], 1)
         
         out_o = self.bottleneck_layer(out_concat)
         
