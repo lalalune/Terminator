@@ -4,6 +4,13 @@ deterministic: False
 no_workers: 8
 seed: 0
 
+torch:
+  backends:
+    cudnn:
+      enabled: True
+    benchmark: True
+    deterministic: False
+
 # network
 net:
   type: "Terminator"

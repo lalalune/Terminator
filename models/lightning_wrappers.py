@@ -271,7 +271,7 @@ class ClassificationWrapper(LightningWrapperBase):
             sync_dist=self.distributed,
         )
 
-    def training_epoch_end(self, train_step_outputs):
+    def on_train_epoch_end(self, train_step_outputs):
         flattened_logits = torch.flatten(
             torch.cat([step_output["logits"] for step_output in train_step_outputs])
         )
@@ -291,12 +291,12 @@ class ClassificationWrapper(LightningWrapperBase):
                 }
             )
 
-    def validation_epoch_end(self, validation_step_outputs):
+    def on_validation_epoch_end(self):
         # Gather logits from validation set and construct a histogram of them.
-        flattened_logits = torch.flatten(torch.cat(validation_step_outputs))
+        # flattened_logits = torch.flatten(torch.cat(validation_step_outputs))
         self.logger.experiment.log(
             {
-                "val/logit_max_abs_value": flattened_logits.abs().max().item(),
+                # "val/logit_max_abs_value": flattened_logits.abs().max().item(),
                 "global_step": self.global_step,
             }
         )

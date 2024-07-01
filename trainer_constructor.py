@@ -49,13 +49,13 @@ def construct_trainer(
     # Distributed training params
     if cfg.device == "cuda":
         sync_batchnorm = cfg.train.distributed
-        strategy = "ddp_find_unused_parameters_false" if cfg.train.distributed else None
+        strategy = "ddp_find_unused_parameters_false" if cfg.train.distributed else "auto"
         gpus = cfg.train.avail_gpus if cfg.train.distributed else 1
         num_nodes = cfg.train.num_nodes if (cfg.train.num_nodes != -1) else 1
     else:
         gpus = 0
         sync_batchnorm = False
-        strategy = None
+        strategy = "auto"
         num_nodes = 1
 
     # create trainer
@@ -64,7 +64,6 @@ def construct_trainer(
         logger=wandb_logger,
         gradient_clip_val=cfg.train.grad_clip,
         accumulate_grad_batches=cfg.train.accumulate_grad_steps,
-        track_grad_norm=cfg.train.track_grad_norm,
         # Callbacks
         callbacks=[
             modelsummary_callback,
@@ -73,7 +72,6 @@ def construct_trainer(
         ],
         # Multi-GPU
         num_nodes=num_nodes,
-        gpus=gpus,
         strategy=strategy,
         sync_batchnorm=sync_batchnorm,
         precision=precision,
