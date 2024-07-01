@@ -16,7 +16,7 @@ HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction
 ### Overall Architecture
 - [x] No residual connections
 - [x] A new variant of self-attention and FWP to get fast weights - `HyperZ⋅Z⋅W` operator
-- [x] Defination of Full-context Interaction
+- [x] Defination of `Full-context Interaction`
 - [x] A multi-branch structure - `Slow-Fast Neural Encoding (SFNE)` Block
 - [x] A local `slow neural loss` to obtain accurate pixel-level scores (i.e. pixel-level "attention")
 - [x] Replace Normlization with `Standardization`: no Affine parameters and Momentum argument
