@@ -57,7 +57,7 @@ If you use this codebase, or otherwise find our work valuable, please cite our p
 
 
 ## Acknowledgement
-Thank Alex Yanko for posting this work on X ([twitter](https://x.com/LeopolisDream/status/1804627325583327358)), which attracts more attention. Harvie Zhang independently conducted this project, which commenced in October 2022 and received 1/4 of its funding from Innovation and Technology Fund. Our code is learned from [ccnn](https://github.com/david-knigge/ccnn). We hope our `Terminator` could promote the exploration of novel network architecture.
+Thank [Alex Yanko](https://x.com/LeopolisDream) for posting this work on X ([twitter](https://x.com/LeopolisDream/status/1804627325583327358)), which attracts more attention. Harvie Zhang independently conducted this project, which commenced in October 2022 and received 1/4 of its funding from Innovation and Technology Fund. Our code is learned from [ccnn](https://github.com/david-knigge/ccnn). We hope our `Terminator` could promote the exploration of novel network architecture.
 
 
 ## Dicussion
