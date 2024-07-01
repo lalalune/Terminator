@@ -31,16 +31,16 @@ pixel-level 1D and 2D image classification benchmarks demonstrate the superior p
 
 
 ### Overall Architecture
-- [x] No residual connections
-- [x] A new variant of self-attention and FWP to get fast weights - `HyperZ⋅Z⋅W` operator
-- [x] Defination of `Full-context Interaction`
-- [x] A multi-branch structure - `Slow-Fast Neural Encoding (SFNE)` Block
-- [x] A local `slow neural loss` to obtain accurate pixel-level scores (i.e. pixel-level "attention")
-- [x] Replace Normlization with `Standardization`: no Affine parameters and Momentum argument
-- [x] `Four new components`: G-IBS, RGU, Hyper-Channel Interaction, Hyper Interaction
-- [x] `Excellent Properties`: faster training convergence, zero-mean features, fewer model parameters
-- [x] New optimizers `Kar2` & `Kar3` (no weight decay) are more suitable for slow-fast architectue
-- [x] The width of NN is far greater than its depth (`5000 vs. 5`) 
+- [x] No residual connections.
+- [x] A new variant of self-attention and FWP to get fast weights - `HyperZ⋅Z⋅W` operator.
+- [x] Defination of `Full-context Interaction`.
+- [x] A multi-branch structure - `Slow-Fast Neural Encoding (SFNE)` Block.
+- [x] A local `slow neural loss` to obtain accurate pixel-level scores (i.e. pixel-level "attention").
+- [x] Replace Normlization with `Standardization`: no Affine parameters and Momentum argument.
+- [x] `Four new components`: G-IBS, RGU, Hyper-Channel Interaction, Hyper Interaction.
+- [x] `Excellent Properties`: faster training convergence, zero-mean features, fewer model parameters.
+- [x] New optimizers `Kar2` & `Kar3` (no weight decay) are more suitable for slow-fast architectue.
+- [x] The width of NN is far greater than its depth (`5000 vs. 5`).
 
 
 ### Installation
