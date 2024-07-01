@@ -24,7 +24,7 @@ def calculate_product_between_positions(x, start_idx, end_idx):
     return product
 
 
-def calculate_slow_neural_loss(ghk_bs, factors):
+def cal_slow_loss(ghk_bs, factors):
     """
     Computes the distance of global hyper-kernels between blocks
     Args:
@@ -42,6 +42,26 @@ def calculate_slow_neural_loss(ghk_bs, factors):
             factor = calculate_product_between_positions(factors, j, i-1)
             
             slow_loss += l2_loss(torch.tile(ghk_bs[j], (1, factor, 1, 1)), ghk_bs[i])
+            
+    return slow_loss
+
+
+def cal_slow_loss_channel_sum(ghk_bs):
+    """
+    Computes the distance of global hyper-kernels between blocks
+    Args:
+        ghk_bs: global hyper kernels of all blocks are in a list
+    Returns:
+        L2 distance between them
+    """
+    num_block = len(ghk_bs)
+    slow_loss = 0.0
+    for i in range(num_block-1, 0, -1):
+        ghk_deep = ghk_bs[i]
+        for j in range(0, i, 1):
+            ghk_shallow = ghk_bs[j]
+            
+            slow_loss += l2_loss(ghk_bs[j].sum(1), ghk_bs[i].sum(1))
             
     return slow_loss
 
