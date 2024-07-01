@@ -10,9 +10,7 @@ HyperZ⋅Z⋅W Operator Connects Slow-Fast Networks for Full Context Interaction
 
 ## Updates
 
-1. I try to open source all the code in the next two days.
-
-2. I seem to have got better results than before!
+1. I try to open source all the code today.
 
 
 ### Overall Architecture
