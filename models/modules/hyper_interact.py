@@ -72,29 +72,31 @@ class HyperInteract(nn.Module):
             data_dim=1,
             kernel_cfg=kernel_cfg_c,
             )
-        self.slow_net_gc = SlowNetType_GC(in_channels=1)
+        self.slow_net_gc_hi = SlowNetType_GC(in_channels=1)
         
         # slow net for spatial
+        kernel_cfg_s.no_hidden = 64
+        kernel_cfg_s.no_layers = 2
         SlowNetType_GS = partial(
             SlowNet_G,
             data_dim=2,
             kernel_cfg=kernel_cfg_s,
             )
-        self.slow_net_gs = SlowNetType_GS(in_channels=1)
+        self.slow_net_gs_hi = SlowNetType_GS(in_channels=1)
 
     def forward(self, y, x=None):   # high-level output y: NCHW
         
         # hyper-channel interaction
         y_c = self.avg_pool(y)   # NC11
         y_c = y_c.squeeze(-1).transpose(-1, -2)   # N1C
-        hk_gc = self.slow_net_gc(y_c)   # 11C
+        hk_gc = self.slow_net_gc_hi(y_c)   # 11C
         # **hyperzzw_2e**
         score_c = HyperZZW_2E(hk_gc, y_c)
         score_c = score_c.transpose(-1, -2).unsqueeze(-1)   # NC11
         
         # hyper-spatial interaction
         y_s = y.mean(axis=1, keepdims=True)  # N1HW
-        hk_gs = self.slow_net_gs(y_s)   # 1HW
+        hk_gs = self.slow_net_gs_hi(y_s)   # 1HW
         # **hyperzzw_2e**
         score_s = HyperZZW_2E(hk_gs, y_s)   # N1HW
 
