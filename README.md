@@ -22,6 +22,8 @@ network, stable zero-mean features, faster training convergence, and fewer model
 pixel-level 1D and 2D image classification benchmarks demonstrate the superior performance of our architecture.
 
 
+<img width="714" alt="image" src="https://github.com/hyperevolnet/Terminator/assets/sfne.png">
+
 
 ## Updates
 
