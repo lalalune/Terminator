@@ -1,3 +1,27 @@
+"""
+This module implements two variations of custom optimization algorithms, Kar2 and Kar3.
+These optimizers introduce modified update rules that uniquely utilize the sign of gradients
+and running averages to adjust model parameters during training. Here's a detailed breakdown
+of each optimizer:
+1. Kar3 Optimizer:
+   - Kar3 utilizes two sets of beta coefficients for running averages of the gradients.
+   - During each update step, Kar3 adjusts model parameters based on the sign of the current
+     gradient and the signs of these two exponential moving averages. This approach allows 
+     Kar3 to moderate parameter updates more effectively, 
+     considering both short-term and longer-term trends in gradient changes.
+2. Kar2 Optimizer:
+   - A simplified variant of Kar3, Kar2 uses a single set of beta coefficients for maintaining a
+     running average of the gradients.
+   - It modifies parameters using their gradient's sign combined with the sign of the single
+     running average, providing a more straightforward but robust mechanism for parameter updates.
+     
+Both optimizers utilize sign-based updates, focusing on the directionality of the gradient rather than 
+its magnitude. This approach differs from typical gradient descent algorithms, which adjust parameters 
+based on the magnitude of the gradient. 
+The differences from the previous Sign-SGD include two points: first, we remove weight decay from the optimizer; 
+second, the gradient is no longer updated by addition with the momentum term.
+"""
+
 import torch
 from torch.optim.optimizer import Optimizer
 
