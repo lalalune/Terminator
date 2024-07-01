@@ -22,8 +22,7 @@ network, stable zero-mean features, faster training convergence, and fewer model
 pixel-level 1D and 2D image classification benchmarks demonstrate the superior performance of our architecture.
 
 
-<center class="half">
-    <img src="./assets/sfne.png" width="200"/><img src="./assets/pixel-level-score.png" width="200"/> </center>
+<center class="half"> <img src="./assets/sfne.png" width="300"/><img src="./assets/pixel-level-score.png" width="200"/> </center>
 
 ## Updates
 
