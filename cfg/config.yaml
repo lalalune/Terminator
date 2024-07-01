@@ -77,9 +77,9 @@ train:
   avail_gpus: -4
 optimizer:
   name: Kar3
-  betas: [0.75, 0.99] # [0.5, 0.95]
-  lr: 0.00120925 # 0.001215
-  l2_reg: 0.00004 # 0.00004
+  betas: [0.75, 0.99]
+  lr: 0.00120925
+  l2_reg: 0.00004
 scheduler:
   name: 'cosine'
   warmup_epochs: 8
