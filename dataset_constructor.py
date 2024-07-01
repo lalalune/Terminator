@@ -40,7 +40,6 @@ def construct_datamodule(
         data_type=cfg.dataset.data_type,
         num_workers=cfg.no_workers,
         pin_memory=pin_memory,
-        augment=cfg.dataset.augment,
     )
     
     # Assert if the datamodule has the parameters needed for the model creation
