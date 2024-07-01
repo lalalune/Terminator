@@ -39,7 +39,7 @@ pixel-level 1D and 2D image classification benchmarks demonstrate the superior p
 - [x] Replace Normlization with `Standardization`: no Affine parameters and Momentum argument
 - [x] `Four new components`: G-IBS, RGU, Hyper-Channel Interaction, Hyper Interaction
 - [x] `Excellent Properties`: faster training convergence, zero-mean features, fewer model parameters
-- [x] New optimizers `Kar2` & `Kar3` are more suitable for slow-fast architectue
+- [x] New optimizers `Kar2` & `Kar3` (no weight decay) are more suitable for slow-fast architectue
 - [x] The width of NN is far greater than its depth (`5000 vs. 5`) 
 
 
