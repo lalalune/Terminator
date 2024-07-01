@@ -20,6 +20,9 @@ its magnitude. This approach differs from typical gradient descent algorithms, w
 based on the magnitude of the gradient. 
 The differences from the previous Sign-SGD include two points: first, we remove weight decay from the optimizer; 
 second, the gradient is no longer updated by addition with the momentum term.
+
+The Kar optimizers also aims to provide a method that can perform multiple gradient descents in a single backpropagation 
+to perform parameter updates, thereby improving the training efficiency of the model.
 """
 
 import torch
