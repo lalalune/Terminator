@@ -23,7 +23,7 @@ pixel-level 1D and 2D image classification benchmarks demonstrate the superior p
 
 
 <img src="./assets/sfne.png" width = "400" height = "300" div align=center />
-
+<img src="./assets/pixel-level-score.png" width = "400" height = "300" div align=center />
 
 ## Updates
 
