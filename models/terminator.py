@@ -1,19 +1,19 @@
 import torch
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer
-from datasets import load_dataset
+from torchvision import datasets, transforms
+from torchvision.models import resnet18
 
 from .kar import Kar3
 from .modules.hyperzzw import HyperZZW_L, HyperZZW_G
 from argparse import ArgumentParser
 
-# Parse command line arguments
+# Command line argument parsing setup
 parser = ArgumentParser()
-parser.add_argument("--batch_size", type=int, default=4)
-# mode train or eval
-parser.add_argument("--mode", type=str, default="train")
+parser.add_argument("--batch_size", type=int, default=128)  # Set default batch size for training/evaluation
+parser.add_argument("--mode", type=str, default="train")  # Set mode to either 'train' or 'eval'
 args = parser.parse_args()
 
+# Print the mode in which the script is running
 if args.mode == "train":
     print("Started terminator in training mode")
 elif args.mode == "eval":
@@ -21,82 +21,61 @@ elif args.mode == "eval":
 else:
     raise ValueError(f"Invalid mode: {args.mode} - Please use 'train' or 'eval'")
 
+# Load the CIFAR dataset
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+])
+dataset = datasets.CIFAR10(root="./data", train=True, download=True, transform=transform)
+dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
 
-# Load a toy dataset from Hugging Face
-dataset = load_dataset("rotten_tomatoes", split="train")
-
-# Initialize the tokenizer
-tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-
-# Tokenize the dataset
-def tokenize_function(examples):
-    return tokenizer(examples["text"], padding="max_length", truncation=True)
-
-tokenized_dataset = dataset.map(tokenize_function, batched=True)
-
-# Create a DataLoader
-dataloader = DataLoader(tokenized_dataset, batch_size=args.batch_size, shuffle=True)
-
-# Define your Terminator model
+# Terminator model definition using PyTorch
 class Terminator(torch.nn.Module):
     def __init__(self):
         super().__init__()
-        self.embedding = torch.nn.Embedding(tokenizer.vocab_size, 128)
-        self.hyperzzw_l = HyperZZW_L(torch.nn.Conv1d, in_channels=128, kernel_size=1)
-        self.hyperzzw_g = HyperZZW_G
-        self.linear = torch.nn.Linear(128, 2)
+        
+        # TODO: Properly implement the HyperZZW architecture here
+        
+        self.resnet = resnet18(pretrained=True)  # ResNet-18 as the backbone
+        self.resnet.fc = torch.nn.Identity()  # Remove the last fully connected layer
+        self.hyperzzw_l = HyperZZW_L(torch.nn.Conv2d, in_channels=512, kernel_size=1)  # Local interaction module
+        self.hyperzzw_g = HyperZZW_G  # Global interaction module
+        self.linear = torch.nn.Linear(512, 10)  # Linear layer for classification
 
-    def forward(self, input_ids):
-        x = self.embedding(input_ids)
-        print(f"Embedded input shape: {x.shape}")
-        assert x.ndim == 3, f"Expected embedded input to have 3 dimensions, got {x.ndim}"
-        assert x.size(2) == 128, f"Expected embedding dimension to be 128, got {x.size(2)}"
-
-        local_feat = self.hyperzzw_l(x, x)
-        global_feat = self.hyperzzw_g(x, x)
-
-        features = local_feat + global_feat
-        print(f"Combined features shape: {features.shape}")
-        assert features.ndim == 3, f"Expected combined features to have 3 dimensions, got {features.ndim}"
-        assert features.size(2) == 128, f"Expected feature dimension to be 128, got {features.size(2)}"
-
-        output = self.linear(features.mean(dim=1))
-        print(f"Output shape: {output.shape}")
-        assert output.ndim == 2, f"Expected output to have 2 dimensions, got {output.ndim}"
-        assert output.size(1) == 2, f"Expected output dimension to be 2, got {output.size(1)}"
-
+    def forward(self, x):
+        x = self.resnet(x)  # Apply ResNet-18 backbone
+        local_feat = self.hyperzzw_l(x, x)  # Apply local HyperZZW interaction
+        global_feat = self.hyperzzw_g(x, x)  # Apply global HyperZZW interaction
+        features = local_feat + global_feat  # Combine local and global features
+        output = self.linear(features.mean(dim=[2, 3]))  # Apply linear layer and classify
         return output
 
-
-# Initialize the model, optimizer, and loss function
+# Initialize model, optimizer (Kar3 algorithm), and loss function
 model = Terminator()
 optimizer = Kar3(model.parameters(), lr=1e-4)
 loss_fn = torch.nn.CrossEntropyLoss()
 
+# Training or evaluation loop
 if args.mode == "train":
-    # Training loop
-    num_epochs = 5
+    num_epochs = 10
     for epoch in range(num_epochs):
         model.train()
         for batch in dataloader:
-            input_ids = torch.stack(batch["input_ids"])  # Convert input_ids to tensor
-            labels = torch.tensor(batch["label"])  # Convert labels to tensor
-            
+            images, labels = batch
             optimizer.zero_grad()
-            outputs = model(input_ids)
+            outputs = model(images)
             loss = loss_fn(outputs, labels)
             loss.backward()
             optimizer.step()
         
-        # Evaluation
+        # Evaluation after training
         model.eval()
         correct = 0
         total = 0
         with torch.no_grad():
             for batch in dataloader:
-                input_ids = torch.stack(batch["input_ids"])  # Convert input_ids to tensor
-                labels = torch.tensor(batch["label"])  # Convert labels to tensor
-                outputs = model(input_ids)
+                images, labels = batch
+                outputs = model(images)
                 _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
@@ -104,15 +83,14 @@ if args.mode == "train":
         accuracy = correct / total
         print(f"Epoch [{epoch+1}/{num_epochs}], Accuracy: {accuracy:.4f}")
 else:
-    # Evaluation
+    # Only evaluation
     model.eval()
     correct = 0
     total = 0
     with torch.no_grad():
         for batch in dataloader:
-            input_ids = torch.stack(batch["input_ids"])
-            labels = torch.tensor(batch["label"])
-            outputs = model(input_ids)
+            images, labels = batch
+            outputs = model(images)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
