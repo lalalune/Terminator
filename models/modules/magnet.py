@@ -44,7 +44,7 @@ class MAGNetLayer(torch.nn.Module):
         return torch.sin(self.linear(x))
 
 
-class MAGNetBase(torch.nn.Module):
+class MAGNet_G(torch.nn.Module):
     def __init__(
         self,
         data_dim: int,
@@ -52,7 +52,7 @@ class MAGNetBase(torch.nn.Module):
         hidden_channels: int,
         out_channels: int,
         num_layers: int,
-        omega_0: float,
+        omega_0: float = 2000.0,
         alpha: float = 6.0,
         beta: float = 1.0,
         **kwargs,
@@ -105,38 +105,6 @@ class MAGNetBase(torch.nn.Module):
         torch.nn.init.kaiming_uniform_(self.output_linear.weight, nonlinearity="linear")
         self.output_linear.bias.data.fill_(0.0)
         
-    def forward(self, coords, x):
-        raise NotImplementedError
-    
-
-class MAGNet_G(MAGNetBase):
-    """
-    The slow net to generate hyper-kernel for global branch & hyper-spatial interaction.
-    """
-    def __init__(
-        self,
-        data_dim: int,
-        kernel_size: int,
-        hidden_channels: int,
-        out_channels: int,
-        num_layers: int,
-        omega_0: float,
-        alpha: float = 6.0,
-        beta: float = 1.0,
-        **kwargs,
-    ):
-        # call super class
-        super().__init__(
-            data_dim=data_dim,
-            kernel_size=kernel_size,
-            hidden_channels=hidden_channels,
-            out_channels=out_channels,
-            num_layers=num_layers,
-            omega_0=omega_0,
-            alpha=alpha,
-            beta=beta,
-        )
-        
         self.bias_p = torch.nn.Parameter(
             torch.zeros(1, 1, kernel_size, kernel_size), requires_grad=True
         )
@@ -149,7 +117,7 @@ class MAGNet_G(MAGNetBase):
         return out
 
 
-class MAGNet_GC(MAGNetBase):
+class MAGNet_GC(torch.nn.Module):
     """
     The slow net to generate hyper-kernel for hyper-channel interaction.
     """
@@ -160,22 +128,58 @@ class MAGNet_GC(MAGNetBase):
         hidden_channels: int,
         out_channels: int,
         num_layers: int,
-        omega_0: float,
+        omega_0: float = 2000.0,
         alpha: float = 6.0,
         beta: float = 1.0,
         **kwargs,
     ):
         # call super class
-        super().__init__(
-            data_dim=data_dim,
-            kernel_size=kernel_size,
-            hidden_channels=hidden_channels,
-            out_channels=out_channels,
-            num_layers=num_layers,
-            omega_0=omega_0,
-            alpha=alpha,
-            beta=beta,
+        super().__init__()
+        
+        self.hidden_channels = hidden_channels
+        
+        # Define type of linear to use
+        Linear = getattr(linear, f"Linear{data_dim}d")
+        
+        # Hidden layers
+        self.linears = torch.nn.ModuleList(
+            [
+                Linear(
+                    in_channels=hidden_channels,
+                    out_channels=hidden_channels,
+                    bias=True,
+                )
+                for _ in range(num_layers)
+            ]
         )
+        
+        # Final layer
+        self.output_linear = Linear(
+            in_channels=hidden_channels,
+            out_channels=out_channels,
+            bias=True,
+        )
+        
+        self.filters = torch.nn.ModuleList(
+            [
+                MAGNetLayer(
+                    data_dim=data_dim,   
+                    hidden_channels=hidden_channels,
+                    omega_0=omega_0,
+                    alpha=alpha / (layer + 1),
+                    beta=beta,
+                )
+                for layer in range(num_layers + 1)
+            ]
+        )
+        
+        # Initialize
+        for idx, lin in enumerate(self.linears):
+            torch.nn.init.kaiming_uniform_(lin.weight, nonlinearity="linear")
+            if lin.bias is not None:
+                lin.bias.data.fill_(1.0)
+        torch.nn.init.kaiming_uniform_(self.output_linear.weight, nonlinearity="linear")
+        self.output_linear.bias.data.fill_(0.0)
         
         # Bias
         self.bias_p = torch.nn.Parameter(
@@ -190,7 +194,7 @@ class MAGNet_GC(MAGNetBase):
         return out
     
 
-class MAGNet_L(MAGNetBase):
+class MAGNet_L(torch.nn.Module):
     """
     The slow net to generate hyper-kernel for local branch.
     Embedding context-dependency in the generation process.
@@ -202,22 +206,58 @@ class MAGNet_L(MAGNetBase):
         hidden_channels: int,
         out_channels: int,
         num_layers: int,
-        omega_0: float,
+        omega_0: float = 2000.0,
         alpha: float = 6.0,
         beta: float = 1.0,
         **kwargs,
     ):
         # call super class
-        super().__init__(
-            data_dim=data_dim,
-            kernel_size=kernel_size,
-            hidden_channels=hidden_channels,
-            out_channels=out_channels,
-            num_layers=num_layers,
-            omega_0=omega_0,
-            alpha=alpha,
-            beta=beta,
+        super().__init__()
+        
+        self.hidden_channels = hidden_channels
+        
+        # Define type of linear to use
+        Linear = getattr(linear, f"Linear{data_dim}d")
+        
+        # Hidden layers
+        self.linears = torch.nn.ModuleList(
+            [
+                Linear(
+                    in_channels=hidden_channels,
+                    out_channels=hidden_channels,
+                    bias=True,
+                )
+                for _ in range(num_layers)
+            ]
         )
+        
+        # Final layer
+        self.output_linear = Linear(
+            in_channels=hidden_channels,
+            out_channels=out_channels,
+            bias=True,
+        )
+        
+        self.filters = torch.nn.ModuleList(
+            [
+                MAGNetLayer(
+                    data_dim=data_dim,   
+                    hidden_channels=hidden_channels,
+                    omega_0=omega_0,
+                    alpha=alpha / (layer + 1),
+                    beta=beta,
+                )
+                for layer in range(num_layers + 1)
+            ]
+        )
+        
+        # Initialize
+        for idx, lin in enumerate(self.linears):
+            torch.nn.init.kaiming_uniform_(lin.weight, nonlinearity="linear")
+            if lin.bias is not None:
+                lin.bias.data.fill_(1.0)
+        torch.nn.init.kaiming_uniform_(self.output_linear.weight, nonlinearity="linear")
+        self.output_linear.bias.data.fill_(0.0)
         
         # Bias
         self.bias_pk = torch.nn.Parameter(
