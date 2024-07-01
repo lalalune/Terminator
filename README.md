@@ -54,7 +54,7 @@ conda env create -f environment.yml
 
 #### Training commands
 ```shell
-python main.py dataset.name="CIFAR100" optimizer.name="Kar3" optimizer.lr=0.00120925 optimizer.l2_reg=0.00004 optimizers.betas=[0.75, 0.99]
+python main.py dataset.name="CIFAR100" optimizer.name="Kar3" optimizer.lr=0.00120925 optimizer.l2_reg=0.00004 optimizer.betas="[0.75, 0.99]"
 ```
 
 #### Testing commands
