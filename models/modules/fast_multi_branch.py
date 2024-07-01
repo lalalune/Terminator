@@ -128,6 +128,8 @@ class FastMultiBranchLayer(torch.nn.Module):
         
         # --------------- Global --------------- #
         global_hk = self.slow_net_g(x)
+
+        # HyperZZW_G - 1
         global_ctx_hk = x.mul(global_hk)
         
         # mlp
@@ -146,7 +148,7 @@ class FastMultiBranchLayer(torch.nn.Module):
         x_hci = self.channel_mixer_hci(x)
         x_hci = self.ins_std(x_hci)
 
-        # global branches
+        # global branches HyperZZW_G - 2
         out = torch.matmul(global_ctx_hk, fast)
         out_x = torch.matmul(global_ctx_hk, mixer_x)
         out_eca = torch.matmul(global_ctx_hk, x_hci)
@@ -157,12 +159,13 @@ class FastMultiBranchLayer(torch.nn.Module):
         # hyper interaction
         x_hyper = self.hyper_interact(out, x)
         
-        # local branches
+        # local branches HyperZZW_L - 1
         local_kernel_f1 = self.slow_net_l1(x) 
         local_kernel_f2 = self.slow_net_l2(x_hci)
         local_kernel_f3 = self.slow_net_l3(mixer_x)
         local_kernel_f4 = self.slow_net_l4(x)
-        
+
+        # HyperZZW_L - 2
         local_feat_1 = self.local_interact_conv_1(local_kernel_f1, x_hci) + self.bias1
         local_feat_2 = self.local_interact_conv_2(local_kernel_f2, x) + self.bias2
         local_feat_3 = self.local_interact_conv_3(local_kernel_f3, x) + self.bias3
