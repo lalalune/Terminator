@@ -62,7 +62,7 @@ python main.py dataset.name="CIFAR100" optimizer.name="Kar3" optimizer.lr=0.0012
 python main.py dataset.name="CIFAR100" train.do=False pretrained.load=True pretrained.filename='**'
 ```
 
-If you want distrubuted training, please add: ```train.distributed=True, num_nodes=1, avail_gpus=4```
+If you want distrubuted training, please add ```train.distributed=True, num_nodes=1, avail_gpus=4```.
 
 
 ## Citation
