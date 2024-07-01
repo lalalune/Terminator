@@ -27,7 +27,7 @@ pixel-level 1D and 2D image classification benchmarks demonstrate the superior p
 
 ## Updates
 
-1. I try to open source all the code today.
+[01-07-2024] I will open source the code on 2D image tasks today. 
 
 
 ### Overall Architecture
